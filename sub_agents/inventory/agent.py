@@ -9,6 +9,7 @@ from google.adk.agents import Agent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset   
 from OrderToCashTeam.sub_agents.inventory import prompt
 from OrderToCashTeam.constants.constants import connection_params
+from utils.mcp_client import MCPClient
 
 # Inventory management agent for stock levels and material availability
 inventory_agent = Agent(
@@ -47,4 +48,15 @@ inventory_agent = Agent(
         ),  
     ]
 )
+
+class InventoryAgent:
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.name = "Inventory Agent"
+
+    async def check_stock(self, material_id: str, plant: str):
+        return await self.mcp_client.execute_operation(
+            "checkInventory",
+            {"productId": material_id, "plant": plant}
+        )
 

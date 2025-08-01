@@ -9,6 +9,7 @@ from google.adk.agents import Agent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset   
 from OrderToCashTeam.sub_agents.sales_order import prompt
 from OrderToCashTeam.constants.constants import connection_params
+from utils.mcp_client import MCPClient
 
 # Sales Order management agent for order processing and lifecycle management
 sales_order_agent = Agent(
@@ -51,3 +52,14 @@ sales_order_agent = Agent(
         ),  
     ]
 )
+
+class SalesOrderAgent:
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.name = "Sales Order Agent"
+
+    async def create_order(self, order_data: dict):
+        return await self.mcp_client.execute_operation(
+            "createSalesOrder",
+            order_data
+        )

@@ -7,6 +7,7 @@ picking, goods issue, and delivery fulfillment within the O2C process.
 
 from google.adk.agents import Agent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
+from utils.mcp_client import MCPClient
 
 from OrderToCashTeam.sub_agents.outbound_delivery import prompt
 from OrderToCashTeam.constants.constants import MCP_CONNECTION_PARAMS
@@ -46,3 +47,16 @@ delivery_agent = Agent(
         )
     ],
 )
+
+class DeliveryAgent:
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.name = "Delivery Agent"
+
+    async def create_delivery(self, sales_order_id: str):
+        return await self.mcp_client.execute_operation(
+            "createOutboundDeliveryHeader",
+            {"salesOrderId": sales_order_id}
+        )
+
+agent = delivery_agent        

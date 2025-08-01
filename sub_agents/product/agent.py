@@ -7,6 +7,7 @@ product information retrieval, and product data management within the O2C proces
 
 from google.adk.agents import Agent
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
+from utils.mcp_client import MCPClient
 
 from OrderToCashTeam.sub_agents.product import prompt
 from OrderToCashTeam.constants.constants import MCP_CONNECTION_PARAMS
@@ -36,3 +37,17 @@ product_agent = Agent(
         )
     ],
 )
+
+class ProductAgent:
+    def __init__(self):
+        self.mcp_client = MCPClient()
+        self.name = "Product Agent"
+
+    async def get_all_products(self):
+        return await self.mcp_client.execute_operation("getProducts")
+    
+    async def get_product_details(self, product_id: str):
+        return await self.mcp_client.execute_operation(
+            "getProductByKey", 
+            {"productId": product_id}
+        )
